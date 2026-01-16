@@ -130,5 +130,7 @@ app.use('/api', router);
 
 // START THE SERVER
 // =============================================================================
-app.listen(port);
-console.log('Magic happens on port ' + port);
+
+app.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
