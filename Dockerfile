@@ -1,18 +1,15 @@
+# Utiliser une image de base Node.js
 FROM node:18-alpine
-
+# Définir le répertoire de travail
 WORKDIR /app
-
-# Copier uniquement les fichiers nécessaires à l'installation
-COPY package.json package-lock.json ./
-
-# Installation propre et déterministe (prod uniquement)
-RUN npm ci --omit=dev
-
-# Copier le reste du code
+# Copier les fichiers de dépendances
+COPY package*.json ./
+# Installer les dépendances
+RUN npm install --production
+# Copier le reste du code source
 COPY . .
-
-# Exposition du port si nécessaire (ex: 3000)
+# Exposer le port (vérifiez le port utilisé dans votre index.js/app.js)
 EXPOSE 3000
-
-# Lancement de l'application
-CMD ["node", "index.js"]
+# Commande de démarrage
+CMD ["node", "server.js"] 
+# (Remplacez index.js par votre fichier d'entrée, ex: app.js ou server.js)
