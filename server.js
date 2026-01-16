@@ -3,7 +3,7 @@
 // =============================================================================
 import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
 import morgan from 'morgan';
 import Bear from './app/models/bear.js';
 
@@ -19,10 +19,10 @@ app.use(bodyParser.json());
 // =============================================================================
 // DATABASE SETUP
 // =============================================================================
-mongoose
-  .connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o')
-  .then(() => console.log('DB connection alive'))
-  .catch(err => console.error('MongoDB connection error:', err));
+//mongoose
+ // .connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o')
+//then(() => console.log('DB connection alive'))
+  //.catch(err => console.error('MongoDB connection error:', err));
 
 // =============================================================================
 // ROUTES
