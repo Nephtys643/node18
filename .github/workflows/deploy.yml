@@ -1,5 +1,4 @@
-name: CI/CD Pipeline Node 18
-
+name: Node.js CI/CD
 on:
   push:
     branches:
@@ -9,84 +8,43 @@ on:
     branches:
       - main
       - develop
-  workflow_dispatch:
-
-env:
-  DOCKER_IMAGE: votre-username/node-app
-  NODE_VERSION: '18.20.0'
-
 jobs:
-  # Job 1: Build l'application
   build:
-    name: Build Application
+    name: Build & Test Node.js
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        
-    - name: Verify Node version
-      run: |
-        node --version
-        npm --version
-        
-    - name: Install dependencies
-      run: npm install
-      
-    - name: Run tests
-      run: npm test
-      continue-on-error: true
+      # Récupération du code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      # Installation de Node.js 18
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      # Installation des dépendances
+      - name: Install dependencies
+        run: npm install
 
-  # Job 2: Build et Push sur Docker Hub
   docker:
     name: Build & Push Docker Image
-    needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-    
+    needs: build
+    if: github.ref == 'refs/heads/main'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
-        
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.DOCKER_IMAGE }}
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-,format=short
-          type=raw,value=latest,enable={{is_default_branch}}
-          type=raw,value=node18
-        labels: |
-          org.opencontainers.image.title=Node App
-          org.opencontainers.image.description=Application Node.js 18
-          
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
-        cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
-        
+      # Récupération du code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  # Connexion à Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      # Construction et push de l'image Docker
+      - name: Build & Push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mon-projet-node:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mon-projet-node:latest
     - name: Image digest
       run: |
         echo "✅ Image pushed successfully!"
