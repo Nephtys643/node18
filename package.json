@@ -1,22 +1,21 @@
 {
-  "name": "node-api",
+  "name": "examen-test",
+  "version": "1.0.0",
   "main": "server.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/scotch-io/node-token-authentication"
-  },
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
     "test": "jest"
   },
-  "author": "Chris Sevilleja <scotch.io>",
+  "author": "Clément Boiscommun",
   "license": "MIT",
   "dependencies": {
     "express": "~4.16.1",
     "morgan": "~1.9.0",
-    "mongoose" : "~4.11.14",
+    "mongoose": "~4.11.14",
     "body-parser": "~1.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
-
-
