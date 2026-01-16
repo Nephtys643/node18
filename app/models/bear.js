@@ -1,8 +1,10 @@
-var mongoose     = require('mongoose');
-var Schema       = mongoose.Schema;
+import mongoose from 'mongoose';
 
-var BearSchema   = new Schema({
-	name: String
+const BearSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  }
 });
 
-module.exports = mongoose.model('Bear', BearSchema);
+export default mongoose.model('Bear', BearSchema);
